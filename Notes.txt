@@ -1,0 +1,6 @@
+﻿TODO:
+	-Improve mutex so it protects "GetLastError aswell" ✅
+	-Add class for init settings ✅
+	-Nest the serialThreadsClass inside serialClass ✅
+	-Crashed when nothing is connected? 
+	
