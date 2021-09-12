@@ -1,36 +1,32 @@
 #include "serialClass.h"
 using namespace std;
 
+bool consoleListPorts()
+{
+	FindComPorts fcp;
+	wstring ports[MAX_PORT_NUM]; //With only 4 physical ports on pc, its unlikely to be more at a given time.
+	wstring portNames[MAX_PORT_NUM];
+	int nPorts=0;
+	string er;
+
+	if(!fcp.listComPorts(portNames,ports,nPorts,er)) {cout<<"Error"<<endl; return false;}
+	if(nPorts>0)
+	{
+		cout<<"Available ports: "<<nPorts<<endl;
+		for(int i=0;i<nPorts;i++) wcout<<"Num"<<i<<" | "<<portNames[i]<<" | "<<ports[i]<<endl;
+	}
+	else cout<<"No available ports"<<endl;
+}
+
 int main()
 {
 	serialClass serial;
 	serialClass::portSettings ps;
+
+	if(!consoleListPorts()) return 0;
+
 	if(!serial.init(ps)) return 0;
-	
-	char* ptr[2];
-	char onStr[32]="ledOn";
-	char offStr[32]="ledOff";
-	ptr[0]=&onStr[0];
-	ptr[1]=&offStr[0];	
-
-	bool turn=true;
-
-	cout<<"Event based serial communiction"<<endl;
-	this_thread::sleep_for(chrono::milliseconds(100));
-	serial.printBuffer();
-	while(true)
-	{	
-		for(int i=0;i<=1;i++) 
-		{
-			if(turn==i) 
-			{
-				serial.write(ptr[i]);			
-				cout<<"echo: "<<ptr[i]<<endl;
-			}
-		}
-		turn=!turn;
-		this_thread::sleep_for(chrono::milliseconds(500));
-	}
-
+		
+	serial.end();	
 	return 0;
 }
